@@ -1,0 +1,47 @@
+The following general system description applies to all parts:
+
+**DATASTRUCTURES**
+I use two structures to represent a voter and a candidate. The Voter structure holds a voter id and whether or not they have voted, both integers. The Candidate structure holds a candidates's name (char*), vote count (int), and whether or not they've been voted on (int). 
+
+I have two buffers, each holding one of either the voter or candidates. There is amacimum of 32 allowable candidates and 256 voters at the moment.
+
+**INTERFACE**
+There are methods on the server relating to the requested actionand returning the specified action. There are also some utility methods for checking if a voter exists and printing out candidates and voters.
+
+These are defined in defs.h and server.h:
+*MESSAGE PROTOCOL*
+The client programs send TCP  messages with a char buffer as follows
+CODE SPACE [ARGUMENTS]
+
+where code is a unique int for the client. The ARGUMENTS are based on the specification in the project document.
+
+So an example msg from a client would be:
+
+"1 1" which means add voter with id 1
+
+The client codes (and arguments)are as follows:
+0 ZEROIZE e.g. "0"
+1 ADD VOTER <ID> e.g. "1 2"
+2 VOTE <NAME> <id> e.g. "2 bush 5"
+3 LIST CANDIDATE e.g. "3"
+4 VOTE COUNT <NAME> "4 bush"
+
+
+REPLIES are the various CODES as follows:
+OK 0
+EXISTS 1
+ERROR 2
+NEW 3
+ALREADYVOTED 5
+NOTAVOTER 4
+TRUE 1
+FALSE 0
+
+There are no conflicts regarding TRUE/EXISTS FALSE/OK as there is a context to themessage. 
+I convert all the codes to integers (as they are sent as a char buffer) to switch on them in the code.
+
+This part is compiled thusly:
+make
+
+
+Connections on port 10293
